@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salda Ventilation Control</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div id="root"></div>
+    
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+        const { Power, Wind, Thermometer, Droplets, Clock, Settings, ChevronRight, TrendingUp, Home, Filter, Zap, Activity, Bluetooth, Wifi, Menu } = window.lucide;
+
+        const SaldaApp = () => {
+          const [power, setPower] = useState(true);
+          const [speed, setSpeed] = useState(3);
+          const [mode, setMode] = useState('auto');
+          const [screen, setScreen] = useState('home');
+          const [airQuality, setAirQuality] = useState(92);
+          const [temp, setTemp] = useState(21);
+          const [humidity, setHumidity] = useState(45);
+          const [bluetoothConnected, setBluetoothConnected] = useState(true);
+          const [wifiConnected, setWifiConnected] = useState(true);
+
+          useEffect(() => {
+            if (!power) return;
+            const interval = setInterval(() => {
+              setAirQuality(prev => Math.min(100, prev + (Math.random() - 0.3) * 2));
+              setTemp(prev => prev + (Math.random() - 0.5) * 0.5);
+              setHumidity(prev => Math.max(30, Math.min(60, prev + (Math.random() - 0.5) * 2)));
+            }, 3000);
+            return () => clearInterval(interval);
+          }, [power]);
+
+          const SaldaArrow = ({ size = 24, className = "", rotating = false }) => (
+            React.createElement('svg', {
+              width: size,
+              height: size,
+              viewBox: "0 0 24 24",
+              fill: "currentColor",
+              className: `${className} ${rotating ? 'animate-spin' : ''}`,
+              style: rotating ? { animationDuration: `${6 - speed}s` } : {}
+            },
+              React.createElement('path', { d: "M12 2L14 8L20 6L16 12L22 14L16 16L20 18L14 16L12 22L10 16L4 18L8 12L2 10L8 8L4 6L10 8L12 2Z" })
+            )
+          );
+
+          const SaldaLogo = () => (
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="relative">
+                  <div className="w-14 h-14 bg-red-600 rounded-xl flex items-center justify-center shadow-lg">
+                    <SaldaArrow size={32} className="text-white" rotating={power} />
+                  </div>
+                  {power && (
+                    <div className="absolute -top-1 -right-1 w-4 h-4 bg-red-600 rounded-full border-2 border-white animate-pulse"></div>
+                  )}
+                </div>
+                <div>
+                  <h1 className="text-3xl font-bold text-red-600" style={{ letterSpacing: '0.1em' }}>SALDA</h1>
+                  <p className="text-xs text-gray-500 tracking-wide">SMART VENTILATION</p>
+                </div>
+              </div>
+              
+              <div className="flex items-center space-x-3">
+                <button 
+                  onClick={() => setBluetoothConnected(!bluetoothConnected)}
+                  className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                    bluetoothConnected ? 'bg-red-50 text-red-600' : 'bg-gray-100 text-gray-400'
+                  }`}
+                >
+                  <Bluetooth size={18} />
+                </button>
+                <button 
+                  onClick={() => setWifiConnected(!wifiConnected)}
+                  className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                    wifiConnected ? 'bg-red-50 text-red-600' : 'bg
